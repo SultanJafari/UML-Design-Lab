@@ -1,0 +1,23 @@
+sequenceDiagram
+    actor Customer
+    participant User
+    participant Order
+    participant MenuItem
+    participant OrderItem
+
+    Customer->>User: createOrder(restaurant)
+    User->>Order: new Order(user, restaurant)
+    User-->>Customer: order
+
+    Customer->>Order: addItem(menuItem, quantity)
+    Order->>MenuItem: getPrice()
+    MenuItem-->>Order: price
+    Order->>OrderItem: new OrderItem(menuItem, quantity, price)
+
+    Customer->>Order: place()
+    alt status is not "CREATED" or order has no items
+        Order-->>Customer: error: cannot place order
+    else valid
+        Order->>Order: set status "CONFIRMED"
+        Order->>User: notifyStatusChange(order, "CONFIRMED")
+    end

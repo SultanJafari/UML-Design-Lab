@@ -1,0 +1,51 @@
+classDiagram
+    direction TB
+
+    class User {
+        -userId: String
+        -name: String
+        -phone: String
+        +createOrder(restaurant: Restaurant) Order
+        +notifyStatusChange(order: Order, newStatus: String) void
+    }
+
+    class Restaurant {
+        -restaurantId: String
+        -name: String
+        -address: String
+        +addMenuItem(item: MenuItem) void
+        +getMenu() List~MenuItem~
+    }
+
+    class MenuItem {
+        -itemId: String
+        -name: String
+        -price: float
+        +getPrice() float
+        +getName() String
+        +getRestaurant() Restaurant
+    }
+
+    class OrderItem {
+        -quantity: int
+        -unitPrice: float
+        +calculateSubtotal() float
+    }
+
+    class Order {
+        -orderId: String
+        -status: String
+        -createdAt: Date
+        +addItem(item: MenuItem, quantity: int) void
+        +removeItem(item: MenuItem) void
+        +place() void
+        +updateStatus(newStatus: String) void
+        +calculateTotal() float
+    }
+
+    Restaurant "1" *-- "1..*" MenuItem : offers
+    User "1" -- "0..*" Order : places
+    Order "0..*" --> "1" Restaurant : ordered from
+    Order "1" *-- "0..*" OrderItem : contains
+    OrderItem "0..*" --> "1" MenuItem : references
+    

@@ -1,0 +1,20 @@
+sequenceDiagram
+    actor Customer
+    participant Order
+    participant MenuItem
+    participant OrderItem
+
+    Customer->>Order: addItem(menuItem, quantity)
+    alt status is not "CREATED"
+        Order-->>Customer: error: order already placed
+    else status is "CREATED"
+        Order->>MenuItem: getRestaurant()
+        MenuItem-->>Order: restaurant
+        alt restaurant differs from the order's restaurant
+            Order-->>Customer: error: item from another restaurant
+        else same restaurant
+            Order->>MenuItem: getPrice()
+            MenuItem-->>Order: price
+            Order->>OrderItem: new OrderItem(menuItem, quantity, price)
+        end
+    end

@@ -1,0 +1,12 @@
+sequenceDiagram
+    actor Staff
+    participant Order
+    participant User
+
+    Staff->>Order: updateStatus(newStatus)
+    alt newStatus is not from (created, confirmed, prepared, delivered)
+        Order-->>Staff: error: invalid states
+    else valid
+        Order->>Order: set status = newStatus
+        Order->>User: notifyStatusChange(order, newStatus)
+    end
